@@ -1,11 +1,12 @@
 import "dotenv/config";
 import "module-alias/register";
 import express, { Express, Request, Response, NextFunction } from "express";
-import logger from "morgan";
 import cors from "cors";
 
 import Database from "@/config/db.config";
-import RateLimit from "@/lib/rateLimit";
+import RateLimit from "@/lib/rate-limit";
+import { logger } from "@/logger";
+import morganLogger from "@/middleware/morgan-middleware";
 
 const app: Express = express();
 const port = process.env.PORT || 5000;
@@ -14,7 +15,7 @@ const ALLOWED_ORIGINS: string[] = [];
 
 // Middleware
 app.use(cors({ origin: ALLOWED_ORIGINS }));
-app.use(logger("dev"));
+app.use(morganLogger("dev"));
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true }));
 
@@ -40,6 +41,26 @@ app.get("/", (req, res) => {
   res.json({
     message: "Welcome to the application!!",
   });
+});
+
+app.get("/test", (req, res) => {
+  let variable = req.query.q;
+
+  if (variable && Number(variable) < 10) {
+    logger.warn("inside less");
+    res.status(400).json({
+      message: "var less than 10",
+    });
+  } else {
+    logger.log({
+      level: "error",
+      message: "inside more",
+      label: "sls"
+    })
+    res.status(400).json({
+      message: "var more than 10",
+    });
+  }
 });
 
 app.listen(port, async () => {
