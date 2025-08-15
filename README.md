@@ -8,14 +8,14 @@ This template provides a robust starting point for building Express applications
 
 <div align="center">
 
-![GitHub contributors](https://img.shields.io/github/contributors/sanchitbajaj02/express-typescript-template?style=flat)
-![license MIT](https://img.shields.io/github/license/sanchitbajaj02/express-typescript-template?style=flat)
+![GitHub contributors](https://img.shields.io/github/contributors/sanchitbajaj02/express-typescript-template)
+![license MIT](https://img.shields.io/github/license/sanchitbajaj02/express-typescript-template)
 ![Stargazers](https://img.shields.io/github/stars/sanchitbajaj02/express-typescript-template?style=flat)
 ![Forks](https://img.shields.io/github/forks/sanchitbajaj02/express-typescript-template?style=flat)
-![GitHub Open issues](https://img.shields.io/github/issues/sanchitbajaj02/express-typescript-template?style=flat)
-![GitHub Closed issues](https://img.shields.io/github/issues-closed/sanchitbajaj02/express-typescript-template?style=flat)
-![GitHub PR Open](https://img.shields.io/github/issues-pr/sanchitbajaj02/express-typescript-template?style=flat)
-![GitHub PR closed](https://img.shields.io/github/issues-pr-closed/sanchitbajaj02/express-typescript-template?style=flat)
+![GitHub Open issues](https://img.shields.io/github/issues/sanchitbajaj02/express-typescript-template)
+![GitHub Closed issues](https://img.shields.io/github/issues-closed/sanchitbajaj02/express-typescript-template)
+![GitHub PR Open](https://img.shields.io/github/issues-pr/sanchitbajaj02/express-typescript-template)
+![GitHub PR closed](https://img.shields.io/github/issues-pr-closed/sanchitbajaj02/express-typescript-template)
 
 </div>
 
