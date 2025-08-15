@@ -1,10 +1,11 @@
 import "dotenv/config";
+import "module-alias/register";
 import express, { Express, Request, Response, NextFunction } from "express";
 import logger from "morgan";
 import cors from "cors";
 
-import Database from "./config/db.config";
-import RateLimit from "./lib/rateLimit";
+import Database from "@/config/db.config";
+import RateLimit from "@/lib/rateLimit";
 
 const app: Express = express();
 const port = process.env.PORT || 5000;
@@ -37,7 +38,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 app.get('/', (req, res) => {
   res.json({
-    message: "Welcome to the application"
+    message: "Welcome to the application!!",
   })
 })
 

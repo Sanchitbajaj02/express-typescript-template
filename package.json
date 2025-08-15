@@ -4,10 +4,17 @@
   "description": "This is a template for express + typescript",
   "main": "src/server.ts",
   "scripts": {
-    "format": "prettier --write src/*/**"
+    "format": "prettier --write src/*/**",
+    "dev": "tsc-watch --onsuccess \"node dist/server.js\"",
+    "build": "rimraf dist && npx tsc",
+    "prestart": "npm run build",
+    "start": "node dist/server.js"
   },
   "author": "sanchitbajaj02",
   "license": "ISC",
+  "_moduleAliases": {
+    "@": "dist"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
@@ -21,8 +28,10 @@
     "@types/express": "^5.0.3",
     "@types/morgan": "^1.9.10",
     "@types/node": "^24.3.0",
+    "module-alias": "^2.2.3",
     "prettier": "^3.6.2",
     "rimraf": "^6.0.1",
+    "tsc-watch": "^7.1.1",
     "typescript": "^5.9.2"
   }
 }

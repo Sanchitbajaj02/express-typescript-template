@@ -34,11 +34,20 @@
 
     // Recommended Options
     "strict": true,
+    "noImplicitAny": true,
     "jsx": "react-jsx",
     "verbatimModuleSyntax": false,
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
-  }
+
+    // TypeScript Path Alias
+    "baseUrl": "." /* Specify the base directory to resolve non-relative module names. */,
+    "paths": {
+      "@/*": ["src/*"]
+    } /* Specify a set of entries that re-map imports to additional lookup locations. */
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"],
 }
