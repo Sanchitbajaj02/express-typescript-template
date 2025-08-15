@@ -32,6 +32,6 @@ export class AppAssertionService implements AssertionService {
   }
 }
 
-const appAssert = new AppAssertionService().assert.bind(new AppAssertionService())
+const appAssert = new AppAssertionService().assert.bind(new AppAssertionService());
 
-export default appAssert
+export default appAssert;
