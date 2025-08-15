@@ -7,6 +7,7 @@ import Database from "@/config/db.config";
 import RateLimit from "@/lib/rate-limit";
 import logger from "@/logger";
 import morganLogger from "@/middleware/morgan-middleware";
+import ErrorHandler from "@/middleware/error-handler";
 
 const app: Express = express();
 const port = process.env.PORT || 5000;
@@ -42,6 +43,9 @@ app.get("/", (req, res) => {
     message: "Welcome to the application!!",
   });
 });
+
+// common error handler logic
+app.use(new ErrorHandler().handle);
 
 app.listen(port, async () => {
   logger.log(`Server running on http://localhost:${port}`);
