@@ -1,0 +1,53 @@
+import winston, { LoggerOptions } from "winston";
+
+const levels = {
+  error: 0,
+  warn: 1,
+  info: 2,
+  http: 3,
+  verbose: 4,
+  debug: 5,
+  silly: 6,
+};
+
+const baseFormat = winston.format.combine(
+  winston.format.errors({ stack: true }),
+  winston.format.timestamp({ format: "YYYY-MM-DD hh:mm:ss A" })
+);
+
+const consoleFormat = winston.format.combine(
+  baseFormat,
+  winston.format.colorize(),
+  winston.format.printf(({ level, message, timestamp, stack }) => {
+    return `${timestamp} [${level}]: ${message} ${stack || ""}`;
+  })
+);
+
+const fileFormat = winston.format.combine(baseFormat, winston.format.json());
+
+const LOG_CONFIG_LEVEL: string = "debug";
+const FILE_LEVEL: string = "info";
+
+export function createLoggerConfig() {
+  const config: LoggerOptions = {
+    levels,
+    level: LOG_CONFIG_LEVEL,
+    transports: [],
+  };
+
+  return config;
+}
+
+export const winstonLogConsole = () => {
+  return new winston.transports.Console({
+    format: consoleFormat,
+  });
+};
+
+export const winstonLogFile = (filename: string) => {
+  return new winston.transports.File({
+    filename: filename,
+    level: FILE_LEVEL,
+    format: fileFormat,
+  });
+};

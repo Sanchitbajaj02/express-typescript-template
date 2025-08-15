@@ -5,7 +5,7 @@ import cors from "cors";
 
 import Database from "@/config/db.config";
 import RateLimit from "@/lib/rate-limit";
-import { logger } from "@/logger";
+import logger from "@/logger";
 import morganLogger from "@/middleware/morgan-middleware";
 
 const app: Express = express();
@@ -43,28 +43,8 @@ app.get("/", (req, res) => {
   });
 });
 
-app.get("/test", (req, res) => {
-  let variable = req.query.q;
-
-  if (variable && Number(variable) < 10) {
-    logger.warn("inside less");
-    res.status(400).json({
-      message: "var less than 10",
-    });
-  } else {
-    logger.log({
-      level: "error",
-      message: "inside more",
-      label: "sls"
-    })
-    res.status(400).json({
-      message: "var more than 10",
-    });
-  }
-});
-
 app.listen(port, async () => {
-  console.log(`Server running on http://localhost:${port}`);
+  logger.log(`Server running on http://localhost:${port}`);
 
   // database connection
   const conn = new Database();
