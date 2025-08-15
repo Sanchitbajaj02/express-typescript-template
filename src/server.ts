@@ -19,7 +19,7 @@ app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true }));
 
 // rate limit implementation
-app.use(new RateLimit(100, 5 * 60).rateLimiter())
+app.use(new RateLimit(10, 5 * 60).rateLimiter());
 
 // Cache-Control headers for all responses
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -36,16 +36,16 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
   res.json({
     message: "Welcome to the application!!",
-  })
-})
+  });
+});
 
 app.listen(port, async () => {
   console.log(`Server running on http://localhost:${port}`);
 
   // database connection
-  const conn = new Database()
-  await conn.connectToDatabase()
+  const conn = new Database();
+  await conn.connectToDatabase();
 });

@@ -1,4 +1,5 @@
 import { rateLimit } from "express-rate-limit";
+import { NextFunction } from "express";
 
 export default class RateLimit {
   private limit: number;
@@ -6,7 +7,7 @@ export default class RateLimit {
 
   /**
    * The rate limit configuration constructor that accepts 2 paramater: `limit` and `windowSize`
-   * 
+   *
    * @param {number} limit accepts the limit parameter over which the api stops working
    * @param {number} windowSize accepts the cooldown period in seconds. E.g. windowSize = 1 means `1000ms`
    */
@@ -15,12 +16,17 @@ export default class RateLimit {
     this.windowSize = windowSize * 1000;
   }
 
-  rateLimiter() {
+  public rateLimiter() {
+    if (process.env.NODE_ENV === "development") {
+      return (req: any, res: any, next: NextFunction) => next();
+    }
     return rateLimit({
       windowMs: this.windowSize,
       limit: this.limit,
       max: this.limit,
-      message: `Too many requests from this IP, please try again after ${this.windowSize / 1000} seconds`,
+      message: {
+        message: `Too many requests from this IP, please try again after ${this.windowSize / 1000} seconds`,
+      },
     });
   }
 }
