@@ -10,8 +10,8 @@
     "prestart": "npm run build",
     "start": "node dist/server.js"
   },
-  "author": "sanchitbajaj02",
-  "license": "ISC",
+  "author": "",
+  "license": "MIT",
   "_moduleAliases": {
     "@": "dist"
   },
