@@ -124,13 +124,13 @@ export default class ServerProtection {
    * @param {any} options - Middleware configuration options
    * @returns Express middleware function
    */
-  private xssSanitizer = (options: any = {}) => {
+  private xssSanitizer = (options: SanitizeOptions) => {
     const { skipRoutes, logThreats, blockOnThreat } = options;
 
     return (req: Request, res: Response, next: NextFunction) => {
       try {
         // Skip certain routes if specified
-        if (skipRoutes.some((route: string) => req.path.includes(route))) {
+        if (skipRoutes && skipRoutes.length > 0 && skipRoutes.some((route: string) => req.path.includes(route))) {
           return next();
         }
 

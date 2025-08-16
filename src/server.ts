@@ -31,10 +31,10 @@ const serviceProtection = new ServerProtection(logger, {
 });
 
 // XSS Protection middleware
-app.use(serviceProtection.xssProtection);
+app.use(serviceProtection.xssProtection());
 
 // Cache-Control headers for all responses
-app.use(serviceProtection.miscProtection);
+app.use(serviceProtection.miscProtection());
 
 app.get("/", (req, res) => {
   res.json({
