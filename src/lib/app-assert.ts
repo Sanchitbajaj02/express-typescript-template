@@ -20,11 +20,11 @@ export class AppAssertionService implements AssertionService {
   }
 
   /**
-   * Asserts a condition and throws an AppError if the condition is falsy
+   * Asserts a condition and throws an CustomError if the condition is falsy
    *
-   * @param {any} condition
-   * @param {StatusCodes} httpStatusCode
-   * @param {string} message
+   * @param {any} condition - always accept the success condition on which if system doesn't follows should throw an error
+   * @param {StatusCodes} httpStatusCode - accepts http status codes in both number and StatusCodes format
+   * @param {string} message - a message that should show up to the user if the condition fails
    * @returns asserts condition
    */
   assert(condition: any, httpStatusCode: StatusCodes, message: string) {
