@@ -1,14 +1,17 @@
 import { ErrorRequestHandler, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import CustomError from "@/lib/custom-error";
-import logger from "@/logger";
+import type { ILoggerService } from "@/logger";
 
 export interface IErrorHandler {
   handle: ErrorRequestHandler;
 }
 
 export default class ErrorHandler implements IErrorHandler {
-  constructor() {}
+  private logger: ILoggerService;
+  constructor(logger: ILoggerService) {
+    this.logger = logger;
+  }
 
   private handleCustomError = (res: Response, error: CustomError) => {
     res.status(error.statusCode).json({
@@ -24,13 +27,13 @@ export default class ErrorHandler implements IErrorHandler {
 
   public handle: ErrorRequestHandler = (error, req, res, _next) => {
     if (error instanceof CustomError) {
-      logger.error(`(${error.statusCode}): ${error.message}`);
+      this.logger.error(`(${error.statusCode}): ${error.message}`);
       this.handleCustomError(res, error);
       return;
     }
 
     if (error instanceof Error) {
-      logger.error(error.stack);
+      this.logger.error(error.stack);
       this.handleNativeError(res, error);
       return;
     }
