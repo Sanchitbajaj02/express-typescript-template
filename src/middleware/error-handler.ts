@@ -30,7 +30,7 @@ export default class ErrorHandler implements IErrorHandler {
     }
 
     if (error instanceof Error) {
-      logger.error(error.message, JSON.stringify({stack: error.stack}));
+      logger.error(error.stack);
       this.handleNativeError(res, error);
       return;
     }

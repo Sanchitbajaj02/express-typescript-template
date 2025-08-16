@@ -48,7 +48,7 @@ app.get("/", (req, res) => {
 app.use(new ErrorHandler().handle);
 
 app.listen(port, async () => {
-  logger.log(`Server running on http://localhost:${port}`);
+  logger.info(`Server running on http://localhost:${port}`);
 
   // database connection
   const conn = new Database();
