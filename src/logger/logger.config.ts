@@ -18,8 +18,8 @@ const baseFormat = winston.format.combine(
 const consoleFormat = winston.format.combine(
   baseFormat,
   winston.format.colorize(),
-  winston.format.printf(({ level, message, timestamp, stack }) => {
-    return `${timestamp} [${level}]: ${message} ${stack || ""}`;
+  winston.format.printf((options: any) => {
+    return `Time: ${options.timestamp} PID: ${process.pid} [${options.level}]: ${options.message} ${options.stack || ""}`;
   })
 );
 

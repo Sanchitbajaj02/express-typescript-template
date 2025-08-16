@@ -11,31 +11,32 @@ export default class LoggerService {
     this.logger.add(transportInfo);
   }
 
-  error(message: string, meta?: any) {
-    this.logger.error(message, meta);
+  error(...args: any[]) {
+    this.logger.error(args.join(' '));
   }
 
-  warn(message: string, meta?: any) {
-    this.logger.warn(message, meta);
+  warn(...args: any[]) {
+    this.logger.warn(args.join(' '));
   }
 
-  info(message: string, meta?: any) {
-    this.logger.info(message, meta);
+  info(...args: any[]) {
+    this.logger.info(args.join(' '));
   }
 
-  http(message: string, meta?: any) {
-    this.logger.http(message, meta);
+  http(...args: any[]) {
+    this.logger.http(args.join(' '));
   }
 
-  verbose(message: string, meta?: any) {
-    this.logger.verbose(message, meta);
+  verbose(...args: any[]) {
+    this.logger.verbose(args.join(' '));
   }
 
-  debug(message: string, meta?: any) {
-    this.logger.debug(message, meta);
+  debug(...args: any[]) {
+    this.logger.debug(args.join(' '));
   }
 
-  log(message: string, meta?: any, logLevel: string = "debug") {
-    this.logger.log(logLevel, message, meta);
+  // log(message: string, meta?: any, logLevel: string = "debug") {
+  log(logLevel: string = "debug", ...args: any[]) {
+    this.logger.log(logLevel, args.join(' '));
   }
 }
