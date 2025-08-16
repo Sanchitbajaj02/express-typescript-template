@@ -1,7 +1,7 @@
 import morgan from "morgan";
-import logger from "@/logger";
+import { Logger } from "winston";
 
-const morganLogger = (loggerConfig: string) => {
+const morganLogger = (logger: Logger, loggerConfig: string) => {
   return morgan(loggerConfig, {
     stream: {
       write: (message) => logger.http(message.trim()),

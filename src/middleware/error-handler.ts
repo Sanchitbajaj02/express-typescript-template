@@ -1,15 +1,15 @@
 import { ErrorRequestHandler, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import CustomError from "@/lib/custom-error";
-import type { ILoggerService } from "@/logger";
+import { Logger } from "winston";
 
 export interface IErrorHandler {
   handle: ErrorRequestHandler;
 }
 
 export default class ErrorHandler implements IErrorHandler {
-  private logger: ILoggerService;
-  constructor(logger: ILoggerService) {
+  private logger: Logger;
+  constructor(logger: Logger) {
     this.logger = logger;
   }
 

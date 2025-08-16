@@ -1,7 +1,7 @@
 import xss from "xss";
 import { Request, Response, NextFunction, Express } from "express";
 import { StatusCodes } from "http-status-codes";
-import type { ILoggerService } from "@/logger";
+import { Logger } from "winston";
 
 type SanitizeOptions = {
   blockOnThreat: boolean;
@@ -31,11 +31,11 @@ const xssOptions = {
 };
 
 export default class ServerProtection {
-  private logger: ILoggerService;
+  private logger: Logger;
   private sanizeOptions: SanitizeOptions;
   private xssOptions?: XssOptions;
 
-  constructor(logger: ILoggerService, sanizeOptions: SanitizeOptions, xssOptions: XssOptions = {}) {
+  constructor(logger: Logger, sanizeOptions: SanitizeOptions, xssOptions: XssOptions = {}) {
     this.logger = logger;
     this.sanizeOptions = sanizeOptions;
     this.xssOptions = xssOptions;

@@ -17,7 +17,7 @@ const ALLOWED_ORIGINS: string[] = [];
 
 // Middleware
 app.use(cors({ origin: ALLOWED_ORIGINS }));
-app.use(morganLogger("dev"));
+app.use(morganLogger(logger, "dev"));
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true }));
 

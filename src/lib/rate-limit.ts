@@ -1,13 +1,13 @@
 import { rateLimit } from "express-rate-limit";
 import { NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
-import type { ILoggerService } from "@/logger";
+import { Logger } from "winston";
 
 export default class RateLimit {
   private limit: number;
   private windowSize: number;
   private skipArray: string[];
-  private logger: ILoggerService;
+  private logger: Logger;
 
   /**
    * The rate limit configuration constructor that accepts 2 paramater: `limit` and `windowSize`
@@ -16,7 +16,7 @@ export default class RateLimit {
    * @param {number} windowSize accepts the cooldown period in seconds. E.g. windowSize = 1 means `1000ms`
    * @param {string[]} [skipArray=[]] accepts the routes which needs to be skipped
    */
-  constructor(logger: ILoggerService, limit: number, windowSize: number, skipArray: string[] = []) {
+  constructor(logger: Logger, limit: number, windowSize: number, skipArray: string[] = []) {
     this.limit = limit;
     this.windowSize = windowSize * 1000;
     this.skipArray = skipArray;
