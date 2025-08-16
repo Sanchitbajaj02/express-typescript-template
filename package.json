@@ -22,7 +22,8 @@
     "express-rate-limit": "^8.0.1",
     "http-status-codes": "^2.3.0",
     "morgan": "^1.10.1",
-    "winston": "^3.17.0"
+    "winston": "^3.17.0",
+    "xss": "^1.0.15"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
