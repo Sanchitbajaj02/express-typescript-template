@@ -1,7 +1,18 @@
 // logger.service.js
 import winston, { LoggerOptions, transport } from "winston";
 
-export default class LoggerService {
+export interface ILoggerService {
+  addTransport(transportInfo: transport): void;
+  error(...args: any[]): void;
+  warn(...args: any[]): void;
+  info(...args: any[]): void;
+  http(...args: any[]): void;
+  verbose(...args: any[]): void;
+  debug(...args: any[]): void;
+  log(logLevel: string, ...args: any[]): void;
+}
+
+export default class LoggerService implements ILoggerService {
   private logger;
   constructor(options: LoggerOptions) {
     this.logger = winston.createLogger(options);

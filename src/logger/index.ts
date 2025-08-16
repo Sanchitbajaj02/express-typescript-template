@@ -1,5 +1,5 @@
 import { createLoggerConfig, winstonLogConsole, winstonLogFile } from "./logger.config";
-import LoggerService from "./logger.service";
+import LoggerService, { ILoggerService } from "./logger.service";
 
 const logger = new LoggerService(createLoggerConfig());
 
@@ -12,3 +12,5 @@ if (process.env.NODE_ENV === "production") {
 }
 
 export default logger;
+
+export type { ILoggerService };
