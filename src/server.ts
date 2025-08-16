@@ -17,7 +17,7 @@ const ALLOWED_ORIGINS: string[] = [];
 
 // Middleware
 app.use(cors({ origin: ALLOWED_ORIGINS }));
-app.use(morganLogger("dev"));
+app.use(morganLogger(logger, "dev"));
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true }));
 
@@ -31,10 +31,10 @@ const serviceProtection = new ServerProtection(logger, {
 });
 
 // XSS Protection middleware
-app.use(serviceProtection.xssProtection);
+app.use(serviceProtection.xssProtection());
 
 // Cache-Control headers for all responses
-app.use(serviceProtection.miscProtection);
+app.use(serviceProtection.miscProtection());
 
 app.get("/", (req, res) => {
   res.json({

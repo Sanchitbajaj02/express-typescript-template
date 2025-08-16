@@ -1,7 +1,7 @@
 import xss from "xss";
 import { Request, Response, NextFunction, Express } from "express";
 import { StatusCodes } from "http-status-codes";
-import type { ILoggerService } from "@/logger";
+import { Logger } from "winston";
 
 type SanitizeOptions = {
   blockOnThreat: boolean;
@@ -31,11 +31,11 @@ const xssOptions = {
 };
 
 export default class ServerProtection {
-  private logger: ILoggerService;
+  private logger: Logger;
   private sanizeOptions: SanitizeOptions;
   private xssOptions?: XssOptions;
 
-  constructor(logger: ILoggerService, sanizeOptions: SanitizeOptions, xssOptions: XssOptions = {}) {
+  constructor(logger: Logger, sanizeOptions: SanitizeOptions, xssOptions: XssOptions = {}) {
     this.logger = logger;
     this.sanizeOptions = sanizeOptions;
     this.xssOptions = xssOptions;
@@ -124,13 +124,13 @@ export default class ServerProtection {
    * @param {any} options - Middleware configuration options
    * @returns Express middleware function
    */
-  private xssSanitizer = (options: any = {}) => {
+  private xssSanitizer = (options: SanitizeOptions) => {
     const { skipRoutes, logThreats, blockOnThreat } = options;
 
     return (req: Request, res: Response, next: NextFunction) => {
       try {
         // Skip certain routes if specified
-        if (skipRoutes.some((route: string) => req.path.includes(route))) {
+        if (skipRoutes && skipRoutes.length > 0 && skipRoutes.some((route: string) => req.path.includes(route))) {
           return next();
         }
 
