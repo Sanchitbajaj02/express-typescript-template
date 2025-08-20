@@ -67,7 +67,7 @@ class DatabaseClientImpl implements IDatabaseClient {
   }
 }
 
-export class DatabaseService implements IDatabaseService {
+export default class DatabaseService implements IDatabaseService {
   private client: IDatabaseClient;
 
   constructor(logger: AppLogger, config: AppConfig) {
