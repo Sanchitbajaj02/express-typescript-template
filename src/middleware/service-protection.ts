@@ -1,22 +1,10 @@
 import xss from "xss";
-import { Request, Response, NextFunction, Express } from "express";
+import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
-import { Logger } from "winston";
+import { AppLogger } from "@/types/logger.types";
+import cors from "cors";
+import { SanitizeOptions, CorsOptions, XssOptions } from "@/types/protection.types";
 
-type SanitizeOptions = {
-  blockOnThreat: boolean;
-  logThreats: boolean;
-  skipRoutes?: string[];
-  failSecurely?: boolean;
-};
-
-type XssOptions = {
-  whiteList?: any;
-  stripIgnoreTag?: boolean;
-  allowCommentTag?: boolean;
-  css?: boolean;
-  stripIgnoreTagBody?: string[];
-};
 
 // XSS configuration options
 const xssOptions = {
@@ -31,15 +19,31 @@ const xssOptions = {
 };
 
 export default class ServerProtection {
-  private logger: Logger;
+  private logger: AppLogger;
   private sanizeOptions: SanitizeOptions;
   private xssOptions?: XssOptions;
+  private allowedOrigins: string[];
 
-  constructor(logger: Logger, sanizeOptions: SanitizeOptions, xssOptions: XssOptions = {}) {
+  constructor(logger: AppLogger, sanizeOptions: SanitizeOptions, allowedOrigins: string[] = [], xssOptions: XssOptions = {}) {
     this.logger = logger;
     this.sanizeOptions = sanizeOptions;
+    this.allowedOrigins = allowedOrigins;
     this.xssOptions = xssOptions;
   }
+
+  /**
+   * CORS protection middleware
+   * @returns Express middleware function
+   */
+  public corsProtection = ({ allowedOrigins, credentials }: CorsOptions) => {
+    this.allowedOrigins = allowedOrigins;
+    return cors({ 
+      origin: this.allowedOrigins,
+      credentials: credentials,
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    });
+  };
 
   /**
    * Sanitize a string value
@@ -159,7 +163,7 @@ export default class ServerProtection {
 
         next();
       } catch (error) {
-        this.logger.error("XSS Sanitization Error:", error);
+        this.logger.error("XSS Sanitization Error:", { error });
 
         // In case of error, either continue (less secure) or block
         if (options.failSecurely !== false) {
@@ -183,6 +187,10 @@ export default class ServerProtection {
     return this.xssSanitizer({ ...this.sanizeOptions, ...options });
   };
 
+  /**
+   * Middleware for miscellaneous security protections
+   * @returns Express middleware function
+   */
   public miscProtection = () => {
     return (req: Request, res: Response, next: NextFunction) => {
       res.setHeader("X-XSS-Protection", "1; mode=block");
