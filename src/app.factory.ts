@@ -26,7 +26,7 @@ export function createApp(deps: Dependencies): Express {
   }));
 
   // Morgan logging middleware
-  app.use(new MorganLogger(logger, "dev").getMiddleware());
+  app.use(new MorganLogger(logger, "dev").createMorganMiddleware());
 
   // Body parsing middleware
   app.use(express.json({ limit: "1mb" }));

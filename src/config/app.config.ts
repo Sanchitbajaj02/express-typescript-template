@@ -8,7 +8,7 @@ const getEnv = <T>(key: string, defaultValue?: T): T => {
   return value as T;
 };
 
-const config: any = {}
+const config: any = {};
 
 config.port = getEnv<number>("PORT", 5000);
 config.nodeEnv = getEnv<string>("NODE_ENV", "development");
@@ -18,7 +18,7 @@ config.rateLimit = {
 };
 config.database = {
   connectionURL: getEnv<string>("DATABASE_URL", ""),
-  connectionType: getEnv<string>("DATABASE_TYPE", "postgres"),
+  connectionType: getEnv<string>("DATABASE_TYPE", "mongodb"),
 };
 
 config.security = {
@@ -30,13 +30,19 @@ config.security = {
 config.environment = getEnv<string>("NODE_ENV", "development");
 
 config.logger = {
-  consoleLogLevel: "info",
+  consoleLogLevel: "debug",
   fileLogLevel: "info",
-  format: "simple",
-  environment: config.environment,
-  transports: [  ],
-  logFolder:"logs",
-  logFileName:"error.log",
+  logFolderPath: "logs",
+  logFileName: "error.log",
+  levels: {
+    error: 0,
+    warn: 1,
+    info: 2,
+    http: 3,
+    verbose: 4,
+    debug: 5,
+    silly: 6,
+  },
 };
 
 export default config;
