@@ -5,17 +5,6 @@ import cors from "cors";
 import { SanitizeOptions, CorsOptions, XssOptions } from "@/types/protection.types";
 import { Logger } from "winston";
 
-// XSS configuration options
-const xssOptions = {
-  whiteList: {
-    // Allow safe HTML tags if needed (customize based on your requirements)
-    // For strict sanitization, keep this minimal or empty
-  },
-  stripIgnoreTag: true,
-  stripIgnoreTagBody: ["script", "style"],
-  allowCommentTag: false,
-  css: false, // Disable CSS to prevent CSS-based XSS
-};
 
 export default class ServerProtection {
   private logger: Logger;

@@ -16,14 +16,18 @@ export function createApp(deps: Dependencies): Express {
     {
       blockOnThreat: config.security.blockOnThreat,
       logThreats: config.security.logThreats,
-    }
+    },
+    config.security.allowedOrigins,
+    config.security.xssOptions
   );
 
   // CORS middleware
-  app.use(serviceProtection.corsProtection({
-    allowedOrigins: config.security.allowedOrigins,
-    credentials: false
-  }));
+  app.use(
+    serviceProtection.corsProtection({
+      allowedOrigins: config.security.allowedOrigins,
+      credentials: config.security.credentials,
+    })
+  );
 
   // Morgan logging middleware
   app.use(new MorganLogger(logger, "dev").createMorganMiddleware());
@@ -33,13 +37,7 @@ export function createApp(deps: Dependencies): Express {
   app.use(express.urlencoded({ extended: true }));
 
   // Rate limiting middleware
-  app.use(
-    new RateLimit(
-      logger,
-      config.rateLimit.limit,
-      config.rateLimit.windowSeconds
-    ).rateLimiter()
-  );
+  app.use(new RateLimit(logger, config.rateLimit.limit, config.rateLimit.windowSeconds).rateLimiter());
 
   // XSS Protection middleware
   app.use(serviceProtection.xssProtection());
@@ -58,4 +56,4 @@ export function createApp(deps: Dependencies): Express {
   app.use(new ErrorHandler(logger).handle);
 
   return app;
-} 
+}

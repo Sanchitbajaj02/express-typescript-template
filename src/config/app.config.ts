@@ -25,6 +25,17 @@ config.security = {
   allowedOrigins: getEnv<string[]>("ALLOWED_ORIGINS", []),
   blockOnThreat: getEnv<boolean>("BLOCK_ON_THREAT", false),
   logThreats: getEnv<boolean>("LOG_THREATS", true),
+  credentials: getEnv<boolean>("ALLOW_CREDENTIALS", false),
+  xssOptions: {
+    whiteList: {
+      // Allow safe HTML tags if needed (customize based on your requirements)
+      // For strict sanitization, keep this minimal or empty
+    },
+    stripIgnoreTag: true,
+    stripIgnoreTagBody: ["script", "style"],
+    allowCommentTag: false,
+    css: false, // Disable CSS to prevent CSS-based XSS
+  },
 };
 
 config.environment = getEnv<string>("NODE_ENV", "development");
