@@ -1,44 +1,42 @@
-import { AppConfig, IConfigService } from "@/types/config.types";
+const getEnv = <T>(key: string, defaultValue?: T): T => {
+  const value = process.env[key] || defaultValue;
 
-export default class AppConfigService implements IConfigService {
-  private config: AppConfig;
-
-  constructor() {
-    this.config = this.loadConfig();
+  if (value === undefined) {
+    throw new Error(`Missing environment variable: ${key}`);
   }
 
-  private getEnv = <T>(key: string, defaultValue?: T): T => {
-    const value = process.env[key] || defaultValue;
+  return value as T;
+};
 
-    if (value === undefined) {
-      throw new Error(`Missing environment variable: ${key}`);
-    }
+const config: any = {}
 
-    return value as T;
-  };
+config.port = getEnv<number>("PORT", 5000);
+config.nodeEnv = getEnv<string>("NODE_ENV", "development");
+config.rateLimit = {
+  limit: getEnv<number>("RATE_LIMIT_LIMIT", 10),
+  windowSeconds: getEnv<number>("RATE_LIMIT_WINDOW_SECONDS", 300),
+};
+config.database = {
+  connectionURL: getEnv<string>("DATABASE_URL", ""),
+  connectionType: getEnv<string>("DATABASE_TYPE", "postgres"),
+};
 
+config.security = {
+  allowedOrigins: getEnv<string[]>("ALLOWED_ORIGINS", []),
+  blockOnThreat: getEnv<boolean>("BLOCK_ON_THREAT", false),
+  logThreats: getEnv<boolean>("LOG_THREATS", true),
+};
 
-  private loadConfig(): AppConfig {
-    return {
-      port: this.getEnv<number>("PORT", 5000),
-      nodeEnv: this.getEnv<string>("NODE_ENV", "development"),
-      rateLimit: {
-        limit: this.getEnv<number>("RATE_LIMIT_LIMIT", 10),
-        windowSeconds: this.getEnv<number>("RATE_LIMIT_WINDOW_SECONDS", 300),
-      },
-      database: {
-        connectionURL: this.getEnv<string>("DATABASE_URL", ""),
-        connectionType: this.getEnv<string>("DATABASE_TYPE", "postgres"),
-      },
-      security: {
-        allowedOrigins: this.getEnv<string[]>("ALLOWED_ORIGINS", []),
-        blockOnThreat: this.getEnv<boolean>("BLOCK_ON_THREAT", false),
-        logThreats: this.getEnv<boolean>("LOG_THREATS", true),
-      },
-    };
-  }
+config.environment = getEnv<string>("NODE_ENV", "development");
 
-  getConfig(): AppConfig {
-    return this.config;
-  }
-} 
+config.logger = {
+  consoleLogLevel: "info",
+  fileLogLevel: "info",
+  format: "simple",
+  environment: config.environment,
+  transports: [  ],
+  logFolder:"logs",
+  logFileName:"error.log",
+};
+
+export default config;

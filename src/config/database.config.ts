@@ -1,15 +1,14 @@
 import { IDatabaseClient, IDatabaseService } from "@/types/database.types";
 import { AppLogger } from "@/types/logger.types";
-import { AppConfig } from "@/types/config.types";
 import { StatusCodes } from "http-status-codes";
 import CustomError from "@/lib/custom-error";
 
 class DatabaseClientImpl implements IDatabaseClient {
   private connected = false;
   private logger: AppLogger;
-  private config: AppConfig;
+  private config: any;
 
-  constructor(logger: AppLogger, config: AppConfig) {
+  constructor(logger: AppLogger, config: any) {
     this.logger = logger;
     this.config = config;
   }
@@ -70,7 +69,7 @@ class DatabaseClientImpl implements IDatabaseClient {
 export default class DatabaseService implements IDatabaseService {
   private client: IDatabaseClient;
 
-  constructor(logger: AppLogger, config: AppConfig) {
+  constructor(logger: AppLogger, config: any) {
     this.client = new DatabaseClientImpl(logger, config);
   }
 

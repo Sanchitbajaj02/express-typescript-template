@@ -1,12 +1,20 @@
 import morgan from "morgan";
 import { Logger } from "winston";
 
-const morganLogger = (logger: Logger, loggerConfig: string) => {
-  return morgan(loggerConfig, {
-    stream: {
-      write: (message) => logger.http(message.trim()),
-    },
-  });
-};
+export default class MorganLogger {
+  private logger: Logger;
+  private morganLogConfig: string;
 
-export default morganLogger;
+  constructor(logger: Logger, morganLogConfig: string) {
+    this.logger = logger;
+    this.morganLogConfig = morganLogConfig;
+  }
+
+  public createMorganMiddleware() {
+    return morgan(this.morganLogConfig, {
+      stream: {
+        write: (message) => this.logger.http(message.trim()),
+      },
+    });
+  }
+}
