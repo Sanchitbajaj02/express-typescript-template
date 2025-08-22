@@ -1,14 +1,5 @@
 import winston, { LoggerOptions } from "winston";
 
-const levels = {
-  error: 0,
-  warn: 1,
-  info: 2,
-  http: 3,
-  verbose: 4,
-  debug: 5,
-  silly: 6,
-};
 
 const baseFormat = winston.format.combine(
   winston.format.errors({ stack: true }),
@@ -24,13 +15,10 @@ const consoleFormat = winston.format.combine(
 
 const fileFormat = winston.format.combine(winston.format.json());
 
-const LOG_CONFIG_LEVEL: string = "debug";
-const FILE_LEVEL: string = "info";
-
-export function createLoggerConfig() {
+export function createLoggerConfig(appConfig: any) {
   const config: LoggerOptions = {
-    levels,
-    level: LOG_CONFIG_LEVEL,
+    levels: appConfig.logger.levels,
+    level: appConfig.logger.consoleLogLevel,
     format: baseFormat,
   };
 
@@ -43,10 +31,10 @@ export const winstonLogConsole = () => {
   });
 };
 
-export const winstonLogFile = (filename: string) => {
+export const winstonLogFile = (appConfig: any) => {
   return new winston.transports.File({
-    filename: filename,
-    level: FILE_LEVEL,
+    filename: `${appConfig.logger.logFolderPath}/${appConfig.logger.logFileName}`,
+    level: appConfig.logger.fileLogLevel,
     format: fileFormat,
   });
 };

@@ -1,30 +1,23 @@
 import xss from "xss";
 import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
-import { AppLogger } from "@/types/logger.types";
 import cors from "cors";
 import { SanitizeOptions, CorsOptions, XssOptions } from "@/types/protection.types";
+import { Logger } from "winston";
 
-
-// XSS configuration options
-const xssOptions = {
-  whiteList: {
-    // Allow safe HTML tags if needed (customize based on your requirements)
-    // For strict sanitization, keep this minimal or empty
-  },
-  stripIgnoreTag: true,
-  stripIgnoreTagBody: ["script", "style"],
-  allowCommentTag: false,
-  css: false, // Disable CSS to prevent CSS-based XSS
-};
 
 export default class ServerProtection {
-  private logger: AppLogger;
+  private logger: Logger;
   private sanizeOptions: SanitizeOptions;
   private xssOptions?: XssOptions;
   private allowedOrigins: string[];
 
-  constructor(logger: AppLogger, sanizeOptions: SanitizeOptions, allowedOrigins: string[] = [], xssOptions: XssOptions = {}) {
+  constructor(
+    logger: Logger,
+    sanizeOptions: SanitizeOptions,
+    allowedOrigins: string[] = [],
+    xssOptions: XssOptions = {}
+  ) {
     this.logger = logger;
     this.sanizeOptions = sanizeOptions;
     this.allowedOrigins = allowedOrigins;
@@ -37,11 +30,11 @@ export default class ServerProtection {
    */
   public corsProtection = ({ allowedOrigins, credentials }: CorsOptions) => {
     this.allowedOrigins = allowedOrigins;
-    return cors({ 
+    return cors({
       origin: this.allowedOrigins,
       credentials: credentials,
-      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+      methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
     });
   };
 

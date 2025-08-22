@@ -1,54 +1,47 @@
 import "dotenv/config";
 import "module-alias/register";
-import express, { Express } from "express";
-import cors from "cors";
+import { DIContainer } from "@/container/di.container";
+import { createApp } from "@/app.factory";
 
-import Database from "@/config/db.config";
-import RateLimit from "@/lib/rate-limit";
-import logger from "@/logger";
-import morganLogger from "@/middleware/morgan-middleware";
-import ErrorHandler from "@/middleware/error-handler";
-import ServerProtection from "@/middleware/service-protection";
+async function startServer() {
+  try {
+    // Initialize dependency injection container
+    const container = DIContainer.getInstance();
+    const deps = await container.initialize();
 
-const app: Express = express();
-const port = process.env.PORT || 5000;
+    // Create Express app with injected dependencies
+    const app = createApp(deps);
 
-const ALLOWED_ORIGINS: string[] = [];
+    // Start server
+    const port = deps.config.port;
+    const server = app.listen(port, async () => {
+      deps.logger.info(`Server running on http://localhost:${port}`);
 
-// Middleware
-app.use(cors({ origin: ALLOWED_ORIGINS }));
-app.use(morganLogger(logger, "dev"));
-app.use(express.json({ limit: "1mb" }));
-app.use(express.urlencoded({ extended: true }));
+      // Connect to database
+      await deps.databaseService.getClient().createConnection();
+    });
 
-// rate limit implementation
-app.use(new RateLimit(logger, 10, 5 * 60).rateLimiter());
+    // Graceful shutdown
+    process.on("SIGTERM", async () => {
+      deps.logger.info("SIGTERM received, shutting down gracefully");
+      server.close(async () => {
+        await container.cleanup();
+        process.exit(0);
+      });
+    });
 
-// service protection initialization
-const serviceProtection = new ServerProtection(logger, {
-  blockOnThreat: true,
-  logThreats: true,
-});
+    process.on("SIGINT", async () => {
+      deps.logger.info("SIGINT received, shutting down gracefully");
+      server.close(async () => {
+        await container.cleanup();
+        process.exit(0);
+      });
+    });
 
-// XSS Protection middleware
-app.use(serviceProtection.xssProtection());
+  } catch (error) {
+    console.error("Failed to start server:", error);
+    process.exit(1);
+  }
+}
 
-// Cache-Control headers for all responses
-app.use(serviceProtection.miscProtection());
-
-app.get("/", (req, res) => {
-  res.json({
-    message: "Welcome to the application!!",
-  });
-});
-
-// common error handler logic
-app.use(new ErrorHandler(logger).handle);
-
-app.listen(port, async () => {
-  logger.info(`Server running on http://localhost:${port}`);
-
-  // database connection
-  const conn = new Database();
-  await conn.connectToDatabase();
-});
+startServer();
