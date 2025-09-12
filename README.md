@@ -37,4 +37,3 @@ rm -rf .git && git init
 ## 🛡️ License
 
 Palettegram is licensed under the MIT License - see the [LICENSE](Licence) file for details.
-
