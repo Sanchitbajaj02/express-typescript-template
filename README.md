@@ -2,7 +2,7 @@
 
 ## 👋 Introduction
 
-This template provides a robust starting point for building Express applications with TypeScript. It includes essential configurations, scripts, and folder structures to streamline development. With built-in support for Type safety and modern tooling, developers can quickly set up scalable, maintainable server-side projects using best practices.
+This template provides a robust starting point for building Express applications with TypeScript. It includes essential configurations, scripts, and folder structures to streamline development. With built-in support for Type safety and modern tooling, developers can quickly set up scalable, maintainable server-side projects using best practices. This repository follows the Layered (N-Tier) Architecture pattern.
 
 ## ⚡ Project Status
 

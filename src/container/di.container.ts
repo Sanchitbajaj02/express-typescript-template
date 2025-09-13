@@ -15,8 +15,6 @@ export class DIContainer {
   private static instance: DIContainer;
   private dependencies: Dependencies | null = null;
 
-  private constructor() {}
-
   static getInstance(): DIContainer {
     if (!DIContainer.instance) {
       DIContainer.instance = new DIContainer();

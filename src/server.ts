@@ -1,7 +1,7 @@
 import "dotenv/config";
 import "module-alias/register";
 import { DIContainer } from "@/container/di.container";
-import { createApp } from "@/app.factory";
+import AppFactory from "@/app.factory";
 
 async function startServer() {
   try {
@@ -10,7 +10,7 @@ async function startServer() {
     const deps = await container.initialize();
 
     // Create Express app with injected dependencies
-    const app = createApp(deps);
+    const app = new AppFactory(deps).createApp();
 
     // Start server
     const port = deps.config.port;

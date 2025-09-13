@@ -8,7 +8,8 @@
     "dev": "tsc-watch --onsuccess \"node dist/server.js\"",
     "build": "rimraf dist && npx tsc",
     "prestart": "npm run build",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "clean": "rimraf .git && git init"
   },
   "author": "",
   "license": "MIT",
