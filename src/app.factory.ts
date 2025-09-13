@@ -5,55 +5,59 @@ import MorganLogger from "@/middleware/morgan-middleware";
 import ErrorHandler from "@/middleware/error-handler";
 import ServerProtection from "@/middleware/service-protection";
 
-export function createApp(deps: Dependencies): Express {
-  const { logger, config } = deps;
+export default class AppFactory {
+  constructor(private deps: Dependencies) {}
 
-  const app: Express = express();
+  public createApp(): Express {
+    const { logger, config, databaseService } = this.deps;
 
-  // Service protection initialization
-  const serviceProtection = new ServerProtection(
-    logger,
-    {
-      blockOnThreat: config.security.blockOnThreat,
-      logThreats: config.security.logThreats,
-    },
-    config.security.allowedOrigins,
-    config.security.xssOptions
-  );
+    const app: Express = express();
 
-  // CORS middleware
-  app.use(
-    serviceProtection.corsProtection({
-      allowedOrigins: config.security.allowedOrigins,
-      credentials: config.security.credentials,
-    })
-  );
+    // Service protection initialization
+    const serviceProtection = new ServerProtection(
+      logger,
+      {
+        blockOnThreat: config.security.blockOnThreat,
+        logThreats: config.security.logThreats,
+      },
+      config.security.allowedOrigins,
+      config.security.xssOptions
+    );
 
-  // Morgan logging middleware
-  app.use(new MorganLogger(logger, "dev").createMorganMiddleware());
+    // CORS middleware
+    app.use(
+      serviceProtection.corsProtection({
+        allowedOrigins: config.security.allowedOrigins,
+        credentials: config.security.credentials,
+      })
+    );
 
-  // Body parsing middleware
-  app.use(express.json({ limit: "1mb" }));
-  app.use(express.urlencoded({ extended: true }));
+    // Morgan logging middleware
+    app.use(new MorganLogger(logger, "dev").createMorganMiddleware());
 
-  // Rate limiting middleware
-  app.use(new RateLimit(logger, config.rateLimit.limit, config.rateLimit.windowSeconds).rateLimiter());
+    // Body parsing middleware
+    app.use(express.json({ limit: "1mb" }));
+    app.use(express.urlencoded({ extended: true }));
 
-  // XSS Protection middleware
-  app.use(serviceProtection.xssProtection());
+    // Rate limiting middleware
+    app.use(new RateLimit(logger, config.rateLimit.limit, config.rateLimit.windowSeconds).rateLimiter());
 
-  // Cache-Control headers for all responses
-  app.use(serviceProtection.miscProtection());
+    // XSS Protection middleware
+    app.use(serviceProtection.xssProtection());
 
-  // Routes
-  app.get("/", (req, res) => {
-    res.json({
-      message: "Welcome to the application!!",
+    // Cache-Control headers for all responses
+    app.use(serviceProtection.miscProtection());
+
+    // Routes
+    app.get("/", (req, res) => {
+      res.json({
+        message: "Welcome to the application!!",
+      });
     });
-  });
 
-  // Error handling middleware (must be last)
-  app.use(new ErrorHandler(logger).handle);
+    // Error handling middleware (must be last)
+    app.use(new ErrorHandler(logger).handle);
 
-  return app;
+    return app;
+  }
 }

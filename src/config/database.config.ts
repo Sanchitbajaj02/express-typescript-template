@@ -3,7 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import CustomError from "@/lib/custom-error";
 import { Logger } from "winston";
 
-class DatabaseClientImpl implements IDatabaseClient {
+class DatabaseClient implements IDatabaseClient {
   private connected = false;
   private logger: Logger;
   private config: any;
@@ -70,7 +70,7 @@ export default class DatabaseService implements IDatabaseService {
   private client: IDatabaseClient;
 
   constructor(logger: Logger, config: any) {
-    this.client = new DatabaseClientImpl(logger, config);
+    this.client = new DatabaseClient(logger, config);
   }
 
   getClient(): IDatabaseClient {
