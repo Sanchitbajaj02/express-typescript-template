@@ -9,7 +9,7 @@ export default class AppFactory {
   constructor(private deps: Dependencies) {}
 
   public createApp(): Express {
-    const { logger, config, databaseService } = this.deps;
+    const { logger, config } = this.deps;
 
     const app: Express = express();
 

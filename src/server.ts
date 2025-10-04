@@ -9,6 +9,9 @@ async function startServer() {
     const container = DIContainer.getInstance();
     const deps = await container.initialize();
 
+    // Connect to database
+    await deps.databaseService.getClient().createConnection();
+
     // Create Express app with injected dependencies
     const app = new AppFactory(deps).createApp();
 
@@ -16,9 +19,6 @@ async function startServer() {
     const port = deps.config.port;
     const server = app.listen(port, async () => {
       deps.logger.info(`Server running on http://localhost:${port}`);
-
-      // Connect to database
-      await deps.databaseService.getClient().createConnection();
     });
 
     // Graceful shutdown
@@ -37,7 +37,6 @@ async function startServer() {
         process.exit(0);
       });
     });
-
   } catch (error) {
     console.error("Failed to start server:", error);
     process.exit(1);
