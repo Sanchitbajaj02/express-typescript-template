@@ -5,6 +5,8 @@ import LoggerService from "@/logger/logger.service";
 import DatabaseService from "@/config/database.config";
 import config from "@/config/app.config";
 
+import DatabaseClient from "@/databases/database.service";
+
 export interface Dependencies {
   logger: Logger;
   config: any;
@@ -40,7 +42,7 @@ export class DIContainer {
 
     const logger = loggerService.getLogger();
 
-    const databaseService = new DatabaseService(logger, config);
+    const databaseService = new DatabaseService(new DatabaseClient(logger, config));
 
     this.dependencies = {
       logger: logger,
