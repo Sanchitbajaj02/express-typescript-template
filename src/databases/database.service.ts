@@ -3,10 +3,11 @@ import { StatusCodes } from "http-status-codes";
 import CustomError from "@/lib/custom-error";
 import { Logger } from "winston";
 
-export default class DatabaseClient implements IDatabaseClient {
+export default class DatabaseConnection implements IDatabaseClient {
   private connected = false;
   private logger: Logger;
   private config: any;
+  private connection: any;
 
   constructor(logger: Logger, config: any) {
     this.logger = logger;
@@ -23,7 +24,9 @@ export default class DatabaseClient implements IDatabaseClient {
       const { connectionURL, connectionType, params } = this.config.database;
 
       if (!connectionURL) {
-        this.logger.warn("No database connection URL provided, skipping connection");
+        this.logger.warn(
+          "No database connection URL provided, skipping connection"
+        );
         return;
       }
 
@@ -37,7 +40,10 @@ export default class DatabaseClient implements IDatabaseClient {
       this.logger.info("Database connected successfully");
     } catch (error) {
       this.logger.error("Failed to connect to database", { error });
-      throw new CustomError(StatusCodes.INTERNAL_SERVER_ERROR, "Error in creation of Database Connection");
+      throw new CustomError(
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        "Error in creation of Database Connection"
+      );
     }
   }
 
@@ -63,5 +69,22 @@ export default class DatabaseClient implements IDatabaseClient {
    */
   isConnected(): boolean {
     return this.connected;
+  }
+
+  /**
+   * Get the database connection
+   * @returns Promise<any>
+   */
+  async getConnection(): Promise<any> {
+    if (!this.connected) {
+      throw new CustomError(
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        "Database not connected"
+      );
+    }
+    /**
+     * Return the actual database connection here
+     */
+    return this.connection;
   }
 }

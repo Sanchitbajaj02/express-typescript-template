@@ -12,4 +12,8 @@ export default class DatabaseService implements IDatabaseService {
   getClient(): IDatabaseClient {
     return this.client;
   }
+
+  getConnection(): Promise<any> {
+    return this.client.getConnection();
+  }
 } 

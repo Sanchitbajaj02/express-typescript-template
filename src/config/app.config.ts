@@ -18,7 +18,11 @@ config.rateLimit = {
 };
 config.database = {
   connectionURL: getEnv<string>("DATABASE_URL", ""),
-  connectionType: getEnv<string>("DATABASE_TYPE", "mongodb"),
+  connectionType: getEnv<string>("DATABASE_TYPE", ""),
+  connectionHost: getEnv<string>("DB_CONNECTION_HOST", ""),
+  connectionUser: getEnv<string>("DB_USER", ""),
+  connectionPassword: getEnv<string>("DB_PASSWORD", ""),
+  connectionDatabase: getEnv<string>("DB_NAME", ""),
 };
 
 config.security = {
