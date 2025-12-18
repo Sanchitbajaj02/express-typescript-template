@@ -1,19 +1,12 @@
 import { IDatabaseClient, IDatabaseService } from "@/types/database.types";
-
 export default class DatabaseService implements IDatabaseService {
-  private client: IDatabaseClient;
+  constructor(private client: IDatabaseClient) {}
 
-  constructor(
-    client: IDatabaseClient
-  ) {
-    this.client = client;
-  }
-
-  getClient(): IDatabaseClient {
+  getClient() {
     return this.client;
   }
 
-  getConnection(): Promise<any> {
+  getConnection() {
     return this.client.getConnection();
   }
-} 
+}
