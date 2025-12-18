@@ -1,0 +1,46 @@
+import "dotenv/config";
+import "module-alias/register";
+import { DIContainer } from "@/container/di.container";
+import AppFactory from "@/app.factory";
+
+async function startServer() {
+  try {
+    // Initialize dependency injection container
+    const container = DIContainer.getInstance();
+    const deps = await container.initialize();
+
+    // Connect to database
+    await deps.databaseService.getClient().createConnection();
+
+    // Create Express app with injected dependencies
+    const app = new AppFactory(deps).createApp();
+
+    // Start server
+    const port = deps.config.port;
+    const server = app.listen(port, async () => {
+      deps.logger.info(`Server running on http://localhost:${port}`);
+    });
+
+    // Graceful shutdown
+    process.on("SIGTERM", async () => {
+      deps.logger.info("SIGTERM received, shutting down gracefully");
+      server.close(async () => {
+        await container.cleanup();
+        process.exit(0);
+      });
+    });
+
+    process.on("SIGINT", async () => {
+      deps.logger.info("SIGINT received, shutting down gracefully");
+      server.close(async () => {
+        await container.cleanup();
+        process.exit(0);
+      });
+    });
+  } catch (error) {
+    console.error("Failed to start server:", error);
+    process.exit(1);
+  }
+}
+
+startServer();
